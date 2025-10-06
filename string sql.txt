@@ -1,0 +1,156 @@
+The table Users contains user IDs and their corresponding names. However, the names are not properly formatted.
+
+The task is to correct the formatting so that only the first character of each name is uppercase, and the rest are lowercase. Implement a solution to achieve this, ordering the results by user_id. 
+
+
+Input:
+Table Name: Users
+
+SELECT user_id , 
+            CONCAT(UPPER(LEFT(name,1)),LOWER(SUBSTRING(name,2))) AS name 
+FROM USERS
+order by user_id;
+
+-----------------------------------------------------------------------------------
+In a social media app, there's a need to detect tweets that exceed a certain character limit.
+
+Given a table containing tweet IDs and their content, determine the IDs of tweets whose content length exceeds 15 characters.
+
+
+Input:
+
+Table Name: Tweets
+
+SELECT tweet_id
+FROM Tweets
+WHERE length(content) > 15;
+
+------------------------------------------------------------------------------
+You have a table address with a column fulladdress containing complete addresses in the format "street, city, state, postalcode". You want to split this column into separate columns for street, city, state, and postal_code.
+
+
+
+Write an SQL query to split the fulladdress column into separate columns for street, city, state, and postalcode.
+
+
+
+Input:
+
+Table Name: Address
+
+select
+substring_index(FULL_Address, ', ' , 1) AS Street,
+substring_index(substring_index(FULL_Address, ", " , 2), ', ', -1) AS City,
+substring_index(substring_index(FULL_Address, ", " , 3), ', ', -1) AS State,
+substring_index(FULL_Address, ', ' , -1) AS Postal_code
+FROM Address
+
+-------------------------------------------------------------------------------------
+You have a table customer with a column phone_number containing phone numbers in the format "XXX-XXX-XXXX". You want to transform these phone numbers into a standardized format "+1 (XXX) XXX-XXXX" for international use.
+
+
+
+Write a SQL query to transform the phone_number column into the formatted_phone_number column, following the standardized format "+1 (XXX) XXX-XXXX" for international use.
+
+
+
+Input:
+
+Table Name: Customer
+
+select
+concat(
+             '+1 (' , 
+              substring(Phone_Number, 1, 3) , ') ',
+              substring(Phone_Number , 5)
+           )
+AS formatted_phone_number
+FROM Customer
+
+--------------------------------------------------------------------
+
+You have a table transaction with a column credit_card_number containing credit card numbers. You want to transform these credit card numbers into a masked format where only the last four digits are visible, with the rest of the digits replaced by "*".
+
+
+
+Write a SQL query to transform the credit_card_number column into the masked_credit_card_number column, where only the last four digits are visible and the rest are replaced by "*".
+
+
+
+Hint: The question requires the use of LPAD to be solved.
+
+
+
+Input:
+
+Table Name: Transaction
+
+select
+  concat(
+           LPAD('*' , length(credit_card_number) - 4, '*'),
+           right(credit_card_number, 4)
+  )
+   AS masked_credit_card_number
+from
+Transaction
+----------------------------------------------------------------------------------------------
+You have a table message with a column text containing messages. You want to transform these messages by replacing all occurrences of "dog" with "cat", and then converting the entire message to uppercase.
+
+
+
+Write a SQL query to transform the text column into the transformed_text column, all occurrences of "dog" are replaced with "cat", and the entire message is converted to uppercase.
+
+
+
+Input:
+
+Table Name: Message
+
+select
+       upper(replace(Text,'dog','cat'))
+       AS transformed_text
+from Message
+--------------------------------------------------------------------------------
+You are given a Customers table which contains customers and their corresponding details. However, there is a column called ContactName which you feel needs to be segregated into two columns First_name and Last_name for a better understanding of the data.
+
+
+
+Write a query that helps you to create separate columns according to the specified names and split the ContactName column into First_name and Last_name. Further, delete the original column and return the resulting table which only contains the First_name and the Last_name column.
+
+alter table customers
+add column First_name text
+after ContactName;
+
+alter table customers
+add column Last_name text
+after First_name;
+
+update customers
+set First_name = substring_index(ContactName, ' ', 1),
+  last_name = substring_index(ContactName, ' ',-1);
+
+alter table customers
+drop column ContactName;
+
+select First_name, Last_name from customers;
+
+----------------------------------------------------------------------------------------------------
+You are given a Customers table which contains customers and their corresponding details. However, there are column two columns named City and Postal_code which you feel need to be merged into a column named City_Code.
+
+
+
+Write a query that helps you to create a separate column according to the specified names, merge the City column and the postal_code column into a single column, and name it City _code which should be in all capital letters. Further, delete both the original columns and return the resulting table which only contains the City_code column.
+
+alter table Customers
+add column City_code text
+after City;
+
+update Customers
+set City_code = Upper(concat(City,'-',PostalCode));
+
+alter table Customers
+drop column City,
+drop column PostalCode;
+
+select City_code  from Customers;
+------------------------------------------------------------------------------------------------------------
