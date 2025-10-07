@@ -1,0 +1,90 @@
+Write an SQL query that will, for each date_id and make_name, return the number of distinct lead_id's and distinct partner_id's. Return the result table in any order.
+
+
+Input:
+
+Table Name: DailySales
+
+SELECT date_id, make_name, 
+COUNT(DISTINCT lead_id) AS lead_id ,
+COUNT(DISTINCT partner_id) AS partner_id
+FROM DailySales
+GROUP BY date_id, make_name;
+
+----------------------------------------------------------------------
+In a university, there is a database table named Teacher that stores information about the subjects taught by each teacher. The table has columns teacher_id, subject_id, and dept_id, where each row represents a teacher teaching a particular subject in a specific department.
+
+
+
+Write an SQL query to determine the count of unique subjects taught by each teacher.
+
+
+
+Input:
+
+Table Name: Teacher
+
+SELECT teacher_id, COUNT(DISTINCT subject_Id) AS cnt
+FROM teacher
+GROUP BY teacher_id
+----------------------------------------------------------------------------------------------
+
+Given a table Person with columns id and phone_number, where id is the primary key and phone_number represents phone numbers, write a SQL query to identify all duplicate phone numbers in the table.
+
+Input:
+
+Table Name: Person
+
+SELECT phone_number
+FROM Person
+GROUP BY phone_number
+HAVING COUNT(*) > 1;
+------------------------------------------------------------------------------
+
+ You are an analyst and you aim to analyze the review scores for the renowned movie "The Matrix" on a movie review platform.
+
+Given a table containing movie reviews, write an SQL query to determine the count of reviews for each rating score received by "The Matrix".
+
+The output should include the movie title, rating score, and the number of reviews with that score.
+
+
+Input:
+
+Table Name: movie_review
+
+SELECT movie_title, rating_score , count(rating_score) AS count
+FROM movie_review
+GROUP BY movie_title,rating_score
+HAVING movie_title = "The Matrix"
+--------------------------------------------------------------------------------------------
+
+CVS Health is conducting an in-depth analysis of its pharmacy sales data to assess the performance of various products in the market. Each drug is exclusively manufactured by a single renowned pharmaceutical company.
+
+
+Write a query to identify pharmaceutical manufacturers associated with drugs that caused losses for CVS Health. Calculate the total amount of losses incurred and output the manufacturer's name, the count of drugs associated with losses, and the total losses in absolute value. Sort the results in descending order based on the highest losses, with the top losses displayed first.
+
+
+Input:
+
+Table Name: pharmacy_sales
+
+SELECT manufacturer , COUNT(drug) AS drug_count, 
+                                   ABS(SUM(cogs) - SUM(total_sales)) AS total_loss
+FROM pharmacy_sales
+WHERE cogs > total_sales
+GROUP BY manufacturer
+ORDER BY total_loss DESC
+-------------------------------------------------------------------------------
+
+You are tasked with determining the mean number of items per order on Amazon, rounded to 1 decimal place. The information is stored in a table named- items_per_order and containing details about the count of items in each order and the corresponding number of orders for each item count.
+
+
+Input:
+
+Table Name: items_per_order
+
+SELECT 
+  ROUND(SUM(item_count * order_occurrence) * 1.0 / SUM(order_occurrence), 1) AS mean
+FROM items_per_order; 
+
+-------------------------------------------------
