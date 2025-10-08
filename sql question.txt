@@ -1,0 +1,63 @@
+The marketing team has identified that numerous user entries in the events table have improper casing and spacing issues in the firstName and lastName fields, leading to inconsistencies in personalized marketing communications.
+
+
+
+
+Write SQL queries to accomplish the following:
+
+Create a duplicate of the events table named events_clean.
+Update this table to ensure that the firstName and lastName are properly trimmed of spaces and converted to the proper case to maintain data hygiene.
+Print the table output with firstName, lastName, artist and song.
+
+CREATE TABLE events_clean AS
+SELECT * FROM events;
+
+UPDATE events_clean
+SET firstName =CONCAT(UPPER( TRIM(LEFT(firstName,1))), LOWER(TRIM(SUBSTRING(firstName,2)))),
+       lastName = CONCAT(UPPER( TRIM(LEFT(lastName,1))), LOWER(TRIM(SUBSTRING(lastName,2))));
+
+SELECT firstName, lastName, artist, song FROM events_clean;
+
+----------------------------------------------------------------------------------------------------------
+
+The analytics team requires the song durations to be rounded off for easier segmentation and analysis. They have requested a new column that shows the duration in whole minutes.
+
+
+
+
+Write SQL queries to accomplish the following:
+
+Create a duplicate of the songs table named songs_duration.
+Alter the table to include a new column duration_minutes that contains the song's duration rounded to the nearest minute.
+Show contents of table songs_duration. Include columns like artist_name, title, duration and duration_minutes.
+
+CREATE TABLE  songs_duration AS
+SELECT * FROM songs;
+
+ALTER TABLE songs_duration
+ADD COLUMN duration_minutes INT;
+
+UPDATE songs_duration SET duration_minutes = ROUND(duration/60);
+
+SELECT artist_name, title, duration, duration_minutes FROM songs_duration;
+
+-------------------------------------------------------------------------------------------
+
+The music streaming service is preparing for an event celebrating music from the 1960s. The database must reflect correct and uniformly formatted song titles from that era for promotional materials.
+
+
+Write SQL queries to accomplish the following:
+
+Create a duplicate of the songs table named songs_60s.
+Update the titles of all songs released before 1970 to uppercase to standardize display across platforms using the update statement.
+Print the table output with artist_id, artist_name, title, year, duration, num_songs, song_id.
+
+CREATE TABLE songs_60s AS
+SELECT * FROM songs;
+
+UPDATE songs_60s
+SET title = UPPER(title) WHERE year < 1970;
+
+SELECT artist_id, artist_name, title, year, duration, num_songs, song_id FROM songs_60s;
+
+----------------------------------------------------------------------------------------------
