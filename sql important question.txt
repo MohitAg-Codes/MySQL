@@ -1,0 +1,41 @@
+shortest distance blt two point
+
+select min(abs(p2.x-p1.x)) as shortest
+from point as p1
+join point as p2
+on p1.x <> p2.x
+
+-----------------------------------------------------------------------------
+
+Second Highest Salary
+
+select max(salary) AS salary from Employee 
+where salary < (select max(salary) from Employee)
+
+----------------------------------------------------------------------
+ Swap Salary
+
+update salary
+set sex = case
+    when sex = 'f' then 'm'
+    when sex = 'm' then 'f'
+    end
+--------------------------------------------------------------------------
+Triangle Judgement
+
+select x,y,z,
+ case
+  when x+y > z and x+z > y and y+z>x then 'Yes'
+  else 'No'
+  end
+  as triangle
+  from triangle
+
+-------------------------------------------------------------------------------------
+ Duplicate Emails
+
+select Email
+from Person
+group by Email
+having count(*) > 1
+-------------------------------------------------------------------------------------------------
