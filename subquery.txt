@@ -1,0 +1,94 @@
+Write an SQL query to report all the classes that have at least five students.
+
+Return the result table in any order.
+
+
+
+Input:
+
+Table Name 1: Courses
+
+select distinct class from courses 
+where class in (
+select class 
+from courses
+group by class
+having count(student) >= 5
+)
+----------------------------------------------------------------------------------------
+
+You're given a table containing the item count for each order on Alibaba, along with the frequency of orders that have the same item count. Write a query to retrieve the mode, which is the item_count that appears most frequently in orders (order_occurrences). Additionally, if there are multiple item counts with the same mode, the results should be sorted in ascending order.
+
+
+
+Input:
+
+Table Name 1: items_per_order
+
+
+SELECT item_count AS mode
+FROM items_per_order
+WHERE order_occurrences = (
+    SELECT MAX(order_occurrences)
+    FROM items_per_order
+)
+ORDER BY mode ASC;
+-----------------------------------------------------------------------------------------
+
+Given a table of activities containing sell dates and product names, write an SQL query to determine, for each date, the number of different products sold and list their names alphabetically.
+
+
+
+Hint: You have to use the concepts of GROUP_CONCAT to answer this question.
+
+
+
+Input:
+
+Table Name 1: Activities
+
+select sell_date, 
+count(distinct product) as num_sold, 
+group_concat(distinct product order by product asc) as products
+from Activities
+group by sell_date
+order by sell_date
+--------------------------------------------------------------------------------------------------
+Write an SQL query to report the second-highest salary from the Employee table. If there is no second-highest salary, the query should report null.
+
+
+
+Input:
+
+Table Name 1: Employee
+
+select max(salary) as secondhighestsalary 
+from employee where salary <
+(select max(salary) from employee) 
+----------------------------------------------------------------------------------------
+
+Create an SQL query to identify the employees who are high earners in each department of the company. A high earner is defined as an employee whose salary ranks within the top three unique salaries for their respective department.
+
+
+
+Hint: Focus on the WHERE clause, where the subquery plays a crucial role. The subquery counts the number of unique salaries greater than the current employee's salary within their department. Use this count to filter employees whose salaries rank among the top three in their respective department.
+
+
+
+Input:
+
+Table Name 1: Employee
+
+select d.name as Department, e.name as Employee, e.Salary
+from Employee e 
+join Department d 
+on e.departmentId = d.id 
+where (
+    select count(distinct salary)
+    from employee e2
+    where e.departmentId = e2.departmentId
+    and e2.salary > e.salary
+) < 3
+order by Department , e.salary desc
+
+-------------------------------------------------------------------------
