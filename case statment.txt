@@ -1,0 +1,107 @@
+Problem statement
+You are given two tables which contain all the employee details and their salary details. The first table mainly consists of the employee's name and the department of the employee. The second table has the details of the employee's salary.
+
+
+
+Input:
+
+Table Name 1: Employees
+
+Table Name 2: Salaries
+
+
+Construct a SQL query to join the employees and salaries tables, then determine the average salary for each department. Departments with an average salary below $70,000 should be classified as Low, those between $70,000 and $80,000 as Medium, and those exceeding $80,000 as High. The final result should include the department name, the rounded average salary per department, formatted to two decimal places and its salary bracket.
+
+select e.department, round(avg(salary),2) as average_salary,
+     case 
+        when avg(salary) < 70000 then 'Low'
+        when avg(salary) between 70000 and 80000 then 'Medium'
+        else 'High'
+    end as salary_bracket
+from Employees e 
+join Salaries s 
+on e.employee_id = s.employee_id
+group by e.department
+-----------------------------------------------------------------------------------------------------------
+
+Given a table containing information on various queries executed on a database, including their results, positions, and ratings, we need to calculate the quality of each query and the percentage of poor queries. Query quality is determined by the average ratio between query rating and position, while poor query percentage represents the proportion of queries with a rating of less than 3.
+
+
+
+Input:
+
+Table Name 1: Queries
+
+
+Hint: When calculating the quality column, remember to first compute the ratio of rating to position, multiply it by 100, and then take the average and apply the rounding function, dividing it by 100. Ensure you're rounding the result to the appropriate decimal places to match the desired format (refer to output).
+
+select query_name,
+         round(avg((rating/position) * 100) ,0)/100 as quality,
+             round(
+                    (sum(case when rating < 3 then 1 else 0 end ) * 100) / count(*),
+                 2) as poor_query_percentage
+from Queries
+group by query_name
+------------------------------------------------------------------------------------------------------------
+
+You have a table named Orders with the following columns: OrderID, CustomerID. Write an SQL query to classify customers based on their engagement level into 'High', 'Medium', and 'Low' based on the number of orders they have placed. The engagement levels are defined as follows:
+
+
+
+'High' if the customer has placed more than 10 orders.
+'Medium' if the customer has placed between 5 and 10 orders.
+'Low' if the customer has placed fewer than 5 orders.
+
+
+Sort the customers in the result set by their engagement level in the order of 'High', 'Medium', and 'Low'.
+
+
+
+Input:
+
+Table Name 1: Orders
+
+OrderID (Primary Key): Unique identifier for each order.
+CustomerID (Foreign Key): Identifier linking the order to a specific customer in the Customers table.
+EmployeeID (Foreign Key): Identifier linking the order to a specific employee in the Employees table.
+OrderDate: Date when the order was placed.
+ShipperID (Foreign Key): Identifier linking the order to a specific shipper in the Shippers table.
+
+select customerID, count(OrderId) As NumberOfOrders,
+         case
+             when count(OrderId) > 10 then 'High'
+             when count(OrderId) between 5 and 10 then 'Medium'
+             else 'Low'
+        end as EngagementLevel
+from Orders
+group by customerID
+order by 
+     case
+             when count(OrderId) > 10 then 'High'
+             when count(OrderId) between 5 and 10 then 'Medium'
+             else 'Low'
+        end desc
+
+-------------------------------------------------------------------------------------------------------------------
+
+You have a table named Products with the following columns: ProductID, Category, and Price. Write an SQL query to calculate an adjusted price for each product based on its category. The adjusted price should be:
+
+
+
+10% higher for products in the 'Electronics' category.
+5% higher for products in the 'Books' category.
+The same is true for the original price for all other categories.
+
+
+The query should return the ProductID, Category, Price, and Adjusted Price for each product.
+
+
+select ProductId, Category, Price,
+      case 
+          when Category = 'Electronics' then price + (price*0.10)
+          when Category = 'Books' then price + (price*0.05)
+          else price
+     end  as AdjustedPrice
+from Products
+
+------------------------------------------------------------------------------------------------------
