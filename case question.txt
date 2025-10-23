@@ -1,0 +1,126 @@
+You are an analyst and you have been given the following two tables:
+
+
+Input:
+
+Table Name 1: Products
+
+ProductID (Primary Key): Unique identifier for each product.
+ProductName: Name of the product.
+CategoryID (Foreign Key): Identifier linking the product to its category.
+SupplierID (Foreign Key): Identifier linking the product to its supplier.
+Unit: Measurement unit in which the product is sold.
+Price: Price of the product.
+
+
+Table Name 2: Suppliers
+
+SupplierID: Unique identifier for each supplier.
+SupplierName: Name of the supplier.
+ContactName: Name of the contact person at the supplier.
+Address: Supplier's address.
+City: City where the supplier is located.
+PostalCode: Postal code of the supplier's location.
+Country: Country where the supplier is located.
+Phone: Contact phone number for the supplier.
+
+
+Using the provided database tables, write a query to list all suppliers along with the total number of products they supply. Additionally, categorize the suppliers as 'Major' if they supply 4 or more products, otherwise categorize them as 'Minor'. Display the supplier name, total number of products supplied, and their supplier category.
+
+
+WITH supplier_product_count AS (
+    SELECT 
+        s.suppliername,
+        COUNT(p.ProductID) AS productcount
+    FROM Suppliers AS s
+     JOIN Products AS p
+        ON s.SupplierID = p.SupplierID
+    GROUP BY s.SupplierName
+)
+SELECT 
+    suppliername,
+    productcount,
+    CASE
+        WHEN productcount >= 4 THEN 'Major'
+        ELSE 'Minor'
+    END AS suppliercategory
+FROM supplier_product_count;
+
+-----------------------------------------------------------------------------------------
+You are an analyst and you have been given the following two tables:
+
+
+Input:
+
+Table Name 1: Order_Details
+
+
+
+OrderDetailID (Primary Key): Unique identifier for every order detail.
+OrderID (Foreign Key): Identifier linking the order to a specific order in the Orders table.
+ProductID (Foreign Key): Identifier linking the order to a specific product in the Products table.
+Quantity: The quantity of the product ordered in this order.
+
+
+Table Name 2: Products
+
+ProductID (Primary Key): Unique identifier for each product.
+ProductName: Name of the product.
+CategoryID (Foreign Key): Identifier linking the product to its category.
+SupplierID: Identifier linking the product to its Supplier.
+Unit: Measurement unit in which the product is sold.
+Price: Price of the product.
+
+
+Using the provided database tables, write a query to find the most frequently ordered product. For this product, display its name, and the total number of orders it has received, and categorize its popularity as 'Popular' if it has received more than 50 orders, otherwise categorize it as 'Average'. Return the product name, the total number of orders, and its popularity category.
+
+
+select p.productname , count(*) as totalorders,
+                              case 
+                                   when count(*) > 50 then 'Popular' else 'Average' end 
+                              as popularity 
+from Order_Details as od
+join Products as p
+on od.ProductId = p.ProductId
+group by p.productname
+order by totalorders desc
+limit 1
+--------------------------------------------------------------------------
+
+ou are an analyst and you have been given the following two tables:
+
+
+Input:
+
+Table Name 1: Orders
+
+OrderID (Primary Key): Unique identifier for each order.
+CustomerID (Foreign Key): Identifier linking the order to a specific customer in the Customers table.
+EmployeeID (Foreign Key): Identifier linking the order to a specific employee in the Employees table.
+OrderDate: Date when the order was placed.
+ShipperID (Foreign Key): Identifier linking the order to a specific shipper in the Shippers table.
+
+
+Table Name 2: Shippers
+
+ShipperID: A unique identifier for each shipper.
+ShipperName: The name of the shipping company.
+Phone: The contact phone number for the shipper.
+
+
+Using the provided database tables, write a query to list all shippers along with the total number of shipments they have handled. Additionally, categorize the shippers based on their total shipments into 'High' (if more than 60 shipments) and 'Low' (otherwise). Display the shipper name, total number of shipments, and their shipment category.
+
+select shippername, 
+         (select count(*)
+         from orders as o
+         where o.shipperId = s.shipperId
+         ) as totalshipments,
+     case 
+         when  (select count(*)
+         from orders as o
+         where o.shipperId = s.shipperId
+         ) > 60 then 'High'
+         else 'Low' 
+         end as shipmentcategory
+from shippers as s
+----------------------------------------------------------------------------------
